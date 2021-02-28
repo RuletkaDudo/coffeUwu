@@ -2,13 +2,15 @@ import sys
 import sqlite3
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QLineEdit, QTextEdit
+import UI.addEditCoffeeForm
+import UI.mainForm
 
 
-class Example(QMainWindow):
+class Example(QMainWindow, UI.mainForm.Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        self.connection = sqlite3.connect("coffee.sqlite")
-        uic.loadUi('main.ui', self)
+        self.connection = sqlite3.connect("data/coffee.sqlite")
+        self.setupUi(self)
         self.addEdit_window = None
         self.table.setColumnCount(7)
         self.table.setHorizontalHeaderLabels(['ID', 'название сорта', 'степень обжарки', 'молотый/в зернах',
@@ -68,17 +70,16 @@ class Example(QMainWindow):
             self.addEdit_window.close()
 
 
-class ExampleTwo(QMainWindow):
+class ExampleTwo(QMainWindow, UI.addEditCoffeeForm.Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.btn.clicked.connect(self.inck_click)
         self.selectedID = None
 
-
     def inck_click(self):
         try:
-            connection = sqlite3.connect("coffee.sqlite")
+            connection = sqlite3.connect("data/coffee.sqlite")
             cur = connection.cursor()
             data = [self.title.text(), self.roasting.text(), self.type.text(),
                     self.description.text(), self.price.text(), self.package_volume.text()]
